@@ -1,223 +1,326 @@
-from pathlib import Path
-from PIL import Image
-import base64, io, zipfile, os, textwrap, re, json
-
-out_dir = Path("/mnt/data/alaska_vercel_fixed")
-out_dir.mkdir(exist_ok=True)
-
-# Existing Alaska images created in this chat
-image_files = [
-    "/mnt/data/alaska_appliances_showroom_service_showcase.png",
-    "/mnt/data/alaska_appliance_service_in_a_modern_kitchen.png",
-    "/mnt/data/arctic_alaska_appliance_showcase.png",
-    "/mnt/data/alaska_appliance_showroom_showcase.png",
-    "/mnt/data/professional_appliance_service_in_a_modern_kitchen.png",
-]
-
-data_uris = []
-for pth in image_files:
-    p = Path(pth)
-    if not p.exists():
-        continue
-    im = Image.open(p).convert("RGB")
-    # Smaller embedded images for a single-file site
-    target_w = 1200
-    if im.width > target_w:
-        im = im.resize((target_w, round(im.height * target_w / im.width)), Image.Resampling.LANCZOS)
-    buf = io.BytesIO()
-    im.save(buf, format="WEBP", quality=78, method=6)
-    data = base64.b64encode(buf.getvalue()).decode("ascii")
-    data_uris.append("data:image/webp;base64," + data)
-
-while len(data_uris) < 5:
-    data_uris.append(data_uris[-1] if data_uris else "")
-
-phone_display = "01028729110"
-phone_tel = "+201028729110"
-wa = "https://wa.me/201028729110"
-site_url = "https://alaska-alpha.vercel.app/"
-address = "11 Ahmed Heshmat St, Mohammed Mazhar, Zamalek, Cairo"
-
-map_iframe = """<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3453.0290911031993!2d31.2217304!3d30.0647006!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x145840e39ec8c973%3A0xfb258964a9078b6a!2sAlaska!5e0!3m2!1sen!2seg!4v1788914691796!5m2!1sen!2seg" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>"""
-
-html = f"""<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>صيانة الاسكا {phone_display} | ثلاجات وديب فريزر الاسكا</title>
-<meta name="description" content="صيانة الاسكا للثلاجات والديب فريزر: فحص وتشخيص ضعف التبريد، توقف التجميد، تراكم الثلج، التسريب والأصوات غير الطبيعية. اتصل {phone_display}.">
-<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
-<link rel="canonical" href="{site_url}">
-<meta property="og:type" content="website">
-<meta property="og:url" content="{site_url}">
-<meta property="og:title" content="صيانة الاسكا | ثلاجات وديب فريزر">
-<meta property="og:description" content="خدمات صيانة وفحص أعطال ثلاجات وديب فريزر الاسكا.">
-<meta property="og:image" content="{data_uris[0]}">
-<meta name="theme-color" content="#073b86">
-<style>
-:root{{--b:#073b86;--b2:#0c67c9;--ice:#edf7ff;--ink:#10233f;--mut:#68758a;--line:#d9e8f5}}
-*{{box-sizing:border-box}}html{{scroll-behavior:smooth}}
-body{{margin:0;font-family:Tahoma,Arial,sans-serif;background:#f7fbff;color:var(--ink);line-height:1.8}}
-a{{text-decoration:none;color:inherit}}img{{width:100%;display:block}}
-.wrap{{width:min(1180px,92%);margin:auto}}
-.top{{background:#052d69;color:#fff;text-align:center;padding:7px 10px;font-size:14px}}
-header{{position:sticky;top:0;z-index:20;background:#ffffffed;border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}}
-nav{{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:13px 0}}
-.logo{{font-weight:900;font-size:25px;color:var(--b)}}
-nav .links{{display:flex;gap:18px;font-size:14px;font-weight:800}}
-.btn{{display:inline-flex;align-items:center;justify-content:center;padding:11px 18px;border-radius:999px;font-weight:900}}
-.btn.blue{{background:var(--b);color:#fff}} .btn.white{{background:#fff;color:var(--b);border:1px solid #bfd6ea}}
-.hero{{padding:54px 0 26px}}
-.hero-grid{{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:center}}
-.tag{{display:inline-block;background:#dcedff;color:var(--b);padding:6px 12px;border-radius:999px;font-size:14px;font-weight:900}}
-h1{{font-size:clamp(40px,6vw,68px);line-height:1.12;margin:14px 0 12px;letter-spacing:-1.5px}}
-h2{{font-size:clamp(29px,4vw,40px);line-height:1.3;margin:0 0 10px}}
-.lead{{font-size:18px;color:var(--mut);margin:0}}
-.actions{{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}}
-.hero-photo{{border-radius:28px;overflow:hidden;box-shadow:0 22px 55px #073b8622}}
-.hero-photo img{{aspect-ratio:4/3;object-fit:cover}}
-section{{padding:56px 0}}
-.head{{text-align:center;max-width:800px;margin:0 auto 28px}}.head p{{color:var(--mut);margin:0}}
-.cards{{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}}
-.card{{background:#fff;border:1px solid var(--line);border-radius:20px;padding:21px;box-shadow:0 10px 25px #0a40720c}}
-.card b{{display:block;font-size:20px;margin-bottom:5px}}.card p{{color:var(--mut);margin:0;font-size:15px}}
-.split{{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center}}
-.split img{{border-radius:25px;aspect-ratio:4/3;object-fit:cover;box-shadow:0 18px 45px #073b861e}}
-.points{{display:grid;gap:10px;margin-top:16px}}.pt{{padding:12px 14px;background:#fff;border:1px solid var(--line);border-radius:14px}}
-.faults{{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}}.fault{{background:#fff;padding:14px 16px;border:1px solid var(--line);border-radius:14px;font-weight:800}}
-.gallery{{display:grid;grid-template-columns:repeat(12,1fr);gap:13px}}
-.gallery figure{{margin:0;overflow:hidden;border-radius:20px;box-shadow:0 15px 35px #073b8618;background:#fff}}
-.gallery img{{height:100%;object-fit:cover}}
-.g1{{grid-column:span 7;min-height:350px}}.g2{{grid-column:span 5;min-height:350px}}.g3,.g4,.g5{{grid-column:span 4;min-height:265px}}
-.contact{{display:grid;grid-template-columns:.9fr 1.1fr;gap:22px}}
-.contact-box{{padding:30px;border-radius:26px;background:linear-gradient(145deg,#052d69,#0c67c9);color:#fff}}
-.phone{{font-size:36px;font-weight:900;direction:ltr;display:inline-block;margin:10px 0 18px}}
-.map{{border-radius:26px;overflow:hidden;min-height:420px;box-shadow:0 16px 40px #073b8618}}.map iframe{{border:0;width:100%;height:100%;min-height:420px}}
-.addr{{font-size:14px;opacity:.88;margin-top:12px}}
-details{{background:#fff;border:1px solid var(--line);border-radius:15px;padding:14px 16px;margin:10px auto;max-width:900px}}
-summary{{font-weight:900;cursor:pointer}}details p{{color:var(--mut);margin:7px 0 0}}
-footer{{text-align:center;color:#718096;padding:30px 0;font-size:13px}}
-.float{{position:fixed;left:16px;bottom:16px;background:var(--b);color:#fff;padding:12px 16px;border-radius:999px;font-weight:900;box-shadow:0 12px 30px #0002;z-index:30}}
-@media(max-width:900px){{.hero-grid,.split,.contact{{grid-template-columns:1fr}}.cards{{grid-template-columns:repeat(2,1fr)}}nav .links{{display:none}}.g1,.g2,.g3,.g4,.g5{{grid-column:span 12;min-height:250px}}}}
-@media(max-width:560px){{.cards,.faults{{grid-template-columns:1fr}}.phone{{font-size:29px}}}}
-</style>
-<script type="application/ld+json">
-{{
- "@context":"https://schema.org",
- "@type":"HomeAndConstructionBusiness",
- "@id":"{site_url}#business",
- "name":"صيانة الاسكا",
- "url":"{site_url}",
- "telephone":"{phone_tel}",
- "address":{{"@type":"PostalAddress","streetAddress":"11 Ahmed Heshmat St","addressLocality":"Zamalek","addressRegion":"Cairo","addressCountry":"EG"}},
- "geo":{{"@type":"GeoCoordinates","latitude":30.0647006,"longitude":31.2217304}},
- "areaServed":["القاهرة","الجيزة"],
- "description":"خدمات صيانة ثلاجات وديب فريزر الاسكا وفحص أعطال التبريد والتجميد."
-}}
-</script>
-</head>
-<body>
-<div class="top">ثلاجات وديب فريزر الاسكا — {phone_display}</div>
-<header><div class="wrap"><nav>
-<a class="logo" href="#home">صيانة الاسكا</a>
-<div class="links"><a href="#services">الخدمات</a><a href="#faults">الأعطال</a><a href="#gallery">الصور</a><a href="#location">الموقع</a></div>
-<a class="btn blue" href="tel:{phone_tel}">اتصل الآن</a>
-</nav></div></header>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<main id="home">
-<section class="hero"><div class="wrap hero-grid">
-<div>
-<span class="tag">ثلاجات • ديب فريزر</span>
-<h1>صيانة الاسكا للثلاجات والديب فريزر</h1>
-<p class="lead">فحص وتشخيص أعطال أجهزة التبريد الاسكا لتحديد سبب المشكلة قبل الإصلاح، سواء كان العطل ضعف تبريد، توقف تجميد، تراكم ثلج، تسريب مياه أو صوت غير طبيعي.</p>
-<div class="actions"><a class="btn blue" href="tel:{phone_tel}">اتصال {phone_display}</a><a class="btn white" href="{wa}" target="_blank" rel="noopener">واتساب</a></div>
-</div>
-<div class="hero-photo"><img src="{data_uris[0]}" alt="صيانة الاسكا للثلاجات والديب فريزر"></div>
-</div></section>
+    <title>صيانة الاسكا 01028729110 | صيانة ثلاجات وديب فريزر الاسكا</title>
 
-<section id="services"><div class="wrap">
-<div class="head"><h2>خدمات صيانة الاسكا</h2><p>خدمات مخصصة للثلاجات والديب فريزر فقط.</p></div>
-<div class="cards">
-<div class="card"><b>صيانة ثلاجات الاسكا</b><p>فحص التبريد والمروحة والحساسات والثرموستات ونظام إذابة الثلج.</p></div>
-<div class="card"><b>صيانة ديب فريزر الاسكا</b><p>تشخيص ضعف التجميد وعدم الفصل والتشغيل المستمر وتراكم الثلج.</p></div>
-<div class="card"><b>فحص وتشخيص الأعطال</b><p>تحديد سبب المشكلة قبل تغيير أي جزء أو اتخاذ قرار الإصلاح.</p></div>
-<div class="card"><b>صيانة منزلية</b><p>فحص الأعطال الشائعة في موقع الجهاز عندما تسمح طبيعة المشكلة بذلك.</p></div>
-</div>
-</div></section>
+    <meta name="description"
+        content="صيانة الاسكا للثلاجات والديب فريزر، فحص وتشخيص أعطال التبريد والتجميد وتراكم الثلج والتسريب والأصوات غير الطبيعية. اتصل 01028729110">
 
-<section><div class="wrap split">
-<img src="{data_uris[1]}" alt="فني صيانة ثلاجات الاسكا" loading="lazy">
-<div><span class="tag">تشخيص قبل الإصلاح</span><h2>ضعف التبريد لا يعني تلقائيًا شحن فريون</h2>
-<p class="lead">يتم أولًا مراجعة تدفق الهواء والمروحة والحساسات والثرموستات ونظام الديفروست ودورة التبريد قبل تحديد السبب.</p>
-<div class="points">
-<div class="pt"><b>ضعف التبريد:</b> فحص دورة التشغيل وتدفق الهواء.</div>
-<div class="pt"><b>تراكم الثلج:</b> مراجعة نظام إذابة الثلج والحساسات.</div>
-<div class="pt"><b>التشغيل المستمر:</b> مراجعة الجوان والثرموستات ودورة التبريد.</div>
-</div></div>
-</div></section>
+    <meta name="robots" content="index, follow, max-image-preview:large">
 
-<section id="faults"><div class="wrap">
-<div class="head"><h2>أشهر أعطال الاسكا</h2><p>أعراض متكررة تحتاج إلى فحص وتشخيص.</p></div>
-<div class="faults">
-<div class="fault">ثلاجة الاسكا لا تبرد</div><div class="fault">ضعف التبريد داخل الثلاجة</div>
-<div class="fault">الفريزر لا يجمد</div><div class="fault">تراكم الثلج داخل الجهاز</div>
-<div class="fault">الثلاجة تعمل باستمرار</div><div class="fault">تسريب مياه أسفل الثلاجة</div>
-<div class="fault">صوت مرتفع أو غير طبيعي</div><div class="fault">ديب فريزر الاسكا لا يجمد</div>
-</div></div></section>
+    <link rel="canonical" href="https://alaska-alpha.vercel.app/">
 
-<section id="gallery"><div class="wrap">
-<div class="head"><h2>صور صيانة الاسكا</h2><p>صور ثلاجات وديب فريزر فقط.</p></div>
-<div class="gallery">
-<figure class="g1"><img src="{data_uris[0]}" alt="ثلاجات وديب فريزر الاسكا"></figure>
-<figure class="g2"><img src="{data_uris[2]}" alt="أجهزة الاسكا للتبريد"></figure>
-<figure class="g3"><img src="{data_uris[1]}" alt="فني صيانة الاسكا"></figure>
-<figure class="g4"><img src="{data_uris[3]}" alt="ديب فريزر الاسكا"></figure>
-<figure class="g5"><img src="{data_uris[4]}" alt="صيانة ثلاجة الاسكا"></figure>
-</div></div></section>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-<section id="location"><div class="wrap contact">
-<div class="contact-box">
-<span class="tag" style="background:#fff;color:#073b86">تواصل معنا</span>
-<h2 style="margin-top:14px">طلب صيانة الاسكا</h2>
-<p>للاستفسار عن صيانة الثلاجات أو الديب فريزر تواصل عبر الهاتف أو واتساب.</p>
-<a class="phone" href="tel:{phone_tel}">{phone_display}</a>
-<div class="actions"><a class="btn white" href="tel:{phone_tel}">اتصال</a><a class="btn white" href="{wa}" target="_blank" rel="noopener">واتساب</a></div>
-<div class="addr">{address}</div>
-</div>
-<div class="map">{map_iframe}</div>
-</div></section>
+        html {
+            scroll-behavior: smooth;
+        }
 
-<section><div class="wrap">
-<div class="head"><h2>الأسئلة الشائعة</h2></div>
-<details><summary>متى تحتاج ثلاجة الاسكا إلى الفحص؟</summary><p>عند ضعف التبريد أو توقف التجميد أو التشغيل المستمر أو التسريب أو تراكم الثلج أو الصوت غير الطبيعي.</p></details>
-<details><summary>هل ضعف التبريد يعني شحن فريون؟</summary><p>ليس بالضرورة؛ يتم فحص المروحة والحساسات والثرموستات ودورة التبريد أولًا.</p></details>
-<details><summary>ما أشهر أعطال ديب فريزر الاسكا؟</summary><p>ضعف التجميد، عدم الفصل، التشغيل المستمر، تراكم الثلج، التسريب أو ارتفاع الصوت.</p></details>
-</div></section>
-</main>
+        body {
+            margin: 0;
+            font-family: Tahoma, Arial, sans-serif;
+            background: #f7fbff;
+            color: #17233c;
+            line-height: 1.8;
+        }
 
-<a class="float" href="tel:{phone_tel}">☎ {phone_display}</a>
-<footer><div class="wrap">© 2026 صيانة الاسكا — ثلاجات وديب فريزر<br><small>موقع لخدمات الصيانة ولا يدّعي أنه الموقع الرسمي للشركة المصنّعة ما لم يثبت خلاف ذلك.</small></div></footer>
-</body></html>"""
+        a {
+            text-decoration: none;
+        }
 
-(out_dir / "index.html").write_text(html, encoding="utf-8")
-(out_dir / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {site_url}sitemap.xml\n", encoding="utf-8")
-(out_dir / "sitemap.xml").write_text(f'''<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>{site_url}</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
-</urlset>
-''', encoding="utf-8")
-(out_dir / "vercel.json").write_text('{"cleanUrls":true,"trailingSlash":false}', encoding="utf-8")
+        img {
+            max-width: 100%;
+            display: block;
+        }
 
-zip_path = Path("/mnt/data/alaska_vercel_fixed.zip")
-if zip_path.exists():
-    zip_path.unlink()
-with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as z:
-    for p in out_dir.rglob("*"):
-        if p.is_file():
-            z.write(p, p.relative_to(out_dir))
+        .container {
+            width: 92%;
+            max-width: 1180px;
+            margin: auto;
+        }
 
-print(f"Created {zip_path}")
-print(f"index.html size: {(out_dir/'index.html').stat().st_size/1024/1024:.2f} MB")
-print("Canonical:", site_url)
-print("Phone:", phone_display)
+        .topbar {
+            background: #062e70;
+            color: white;
+            text-align: center;
+            padding: 8px;
+            font-weight: bold;
+        }
+
+        header {
+            background: white;
+            border-bottom: 1px solid #dce8f4;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 72px;
+        }
+
+        .logo {
+            color: #08459a;
+            font-weight: 900;
+            font-size: 27px;
+        }
+
+        .menu {
+            display: flex;
+            gap: 24px;
+        }
+
+        .menu a {
+            color: #17233c;
+            font-weight: bold;
+        }
+
+        .call-btn,
+        .main-btn {
+            background: #08459a;
+            color: white;
+            padding: 11px 20px;
+            border-radius: 30px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        .hero {
+            padding: 60px 0;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 45px;
+            align-items: center;
+        }
+
+        .badge {
+            background: #dcecff;
+            color: #08459a;
+            display: inline-block;
+            padding: 6px 15px;
+            border-radius: 30px;
+            font-weight: bold;
+        }
+
+        h1 {
+            font-size: 58px;
+            line-height: 1.2;
+            margin: 18px 0;
+        }
+
+        h2 {
+            font-size: 36px;
+            line-height: 1.35;
+            margin-bottom: 12px;
+        }
+
+        h3 {
+            margin-top: 0;
+        }
+
+        .hero p,
+        .section-title p {
+            color: #66758b;
+            font-size: 18px;
+        }
+
+        .hero-buttons {
+            margin-top: 25px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .whatsapp-btn {
+            background: white;
+            border: 1px solid #bad5ee;
+            color: #08459a;
+            padding: 11px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+        }
+
+        .hero-image img {
+            border-radius: 28px;
+            box-shadow: 0 20px 45px rgba(10, 70, 150, 0.16);
+        }
+
+        section {
+            padding: 60px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            max-width: 800px;
+            margin: auto;
+            margin-bottom: 35px;
+        }
+
+        .services {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+
+        .service {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            border: 1px solid #dce8f4;
+            box-shadow: 0 8px 30px rgba(20, 70, 120, 0.06);
+        }
+
+        .service-icon {
+            width: 50px;
+            height: 50px;
+            background: #e5f2ff;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .service p {
+            color: #66758b;
+        }
+
+        .split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .split img {
+            border-radius: 25px;
+            box-shadow: 0 18px 45px rgba(10, 70, 150, 0.14);
+        }
+
+        .points {
+            display: grid;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .point {
+            background: white;
+            border: 1px solid #dce8f4;
+            padding: 14px;
+            border-radius: 14px;
+        }
+
+        .fault-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .fault {
+            background: white;
+            border: 1px solid #dce8f4;
+            padding: 17px;
+            border-radius: 15px;
+            font-weight: bold;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 15px;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+            box-shadow: 0 14px 35px rgba(10, 70, 150, 0.12);
+        }
+
+        .photo1 {
+            grid-column: span 7;
+            height: 390px;
+        }
+
+        .photo2 {
+            grid-column: span 5;
+            height: 390px;
+        }
+
+        .photo3,
+        .photo4,
+        .photo5 {
+            grid-column: span 4;
+            height: 290px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr;
+            gap: 25px;
+        }
+
+        .contact-box {
+            background: linear-gradient(145deg, #062e70, #0870d8);
+            color: white;
+            padding: 35px;
+            border-radius: 28px;
+        }
+
+        .contact-box h2 {
+            color: white;
+        }
+
+        .phone {
+            font-size: 38px;
+            font-weight: bold;
+            direction: ltr;
+            display: block;
+            color: white;
+            margin: 12px 0;
+        }
+
+        .address {
+            margin-top: 20px;
+        }
+
+        .map {
+            overflow: hidden;
+            border-radius: 28px;
+            min-height: 450px;
+        }
+
+        .map iframe {
+            width: 100%;
+            height: 450px;
+            border: 0;
+        }
+
+        details {
+            max-width: 900px;
+            margin: 12px auto;
+            background: white;
+            border: 1px solid #dce8f4;
+            padding: 17px;
+            border-radius: 15px;
+        }
+
+        summary {
+            font-weight: bold;
+            cursor: pointer;
+       
