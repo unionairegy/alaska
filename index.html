@@ -1,251 +1,319 @@
-from pathlib import Path
-from PIL import Image
-import base64, io, re
-
-# Use the five Alaska images already generated in this conversation
-paths = [
-    "/mnt/data/alaska_appliances_showroom_service_showcase.png",
-    "/mnt/data/alaska_appliance_service_in_a_modern_kitchen.png",
-    "/mnt/data/arctic_alaska_appliance_showcase.png",
-    "/mnt/data/alaska_appliance_showroom_showcase.png",
-    "/mnt/data/professional_appliance_service_in_a_modern_kitchen.png",
-]
-
-data_uris = []
-for p in paths:
-    im = Image.open(p).convert("RGB")
-    if im.width > 1200:
-        im = im.resize((1200, round(im.height * 1200 / im.width)), Image.Resampling.LANCZOS)
-    buf = io.BytesIO()
-    im.save(buf, "WEBP", quality=78, method=6)
-    data_uris.append("data:image/webp;base64," + base64.b64encode(buf.getvalue()).decode())
-
-html = f"""<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>صيانة ألاسكا 01028729110 | ثلاجات وديب فريزر ألاسكا</title>
-<meta name="description" content="صيانة ألاسكا للثلاجات والديب فريزر في القاهرة. فحص وتشخيص ضعف التبريد والتجميد وتراكم الثلج والتسريب والأصوات غير الطبيعية. اتصل 01028729110">
-<meta name="robots" content="index, follow, max-image-preview:large">
-<meta name="theme-color" content="#073f92">
-<link rel="canonical" href="https://alaska-alpha.vercel.app/">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مركز صيانة ألاسكا المعتمد | صيانة ثلاجات وديب فريزر</title>
+    <meta name="description" content="مركز صيانة ألاسكا في مصر. صيانة ثلاجات وديب فريزر بأعلى جودة وقطع غيار أصلية بالزمالك والقاهرة.">
+    <!-- خط Cairo الاحترافي -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <!-- مكتبة الأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #0d233a;
+            --accent-color: #ffcc00;
+            --whatsapp-color: #25d366;
+            --bg-light: #f9f9f9;
+            --text-color: #333333;
+        }
 
-<style>
-*{{margin:0;padding:0;box-sizing:border-box}}
-html{{scroll-behavior:smooth}}
-body{{font-family:"Cairo",sans-serif;background:#f6faff;color:#13233c;line-height:1.8}}
-a{{text-decoration:none}} img{{width:100%;display:block}}
-.container{{width:92%;max-width:1180px;margin:auto}}
-.top-bar{{background:#052e6c;color:#fff;text-align:center;padding:7px 10px;font-size:14px;font-weight:700}}
-header{{background:rgba(255,255,255,.97);border-bottom:1px solid #dce8f4;position:sticky;top:0;z-index:9999;box-shadow:0 5px 20px rgba(0,40,90,.05)}}
-.nav{{min-height:74px;display:flex;justify-content:space-between;align-items:center;gap:20px}}
-.logo{{font-size:26px;font-weight:900;color:#073f92}}
-.menu{{display:flex;gap:22px}} .menu a{{color:#17233c;font-size:14px;font-weight:700}}
-.call-header{{background:#073f92;color:#fff;padding:10px 18px;border-radius:30px;font-weight:800}}
-.hero{{padding:65px 0 45px;background:radial-gradient(circle at top right,#e4f3ff,transparent 40%),#f8fcff}}
-.hero-grid{{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:45px}}
-.badge{{display:inline-block;background:#ddebff;color:#073f92;padding:6px 14px;border-radius:30px;font-size:14px;font-weight:800}}
-.hero h1{{font-size:clamp(40px,6vw,66px);line-height:1.18;margin:18px 0;color:#0b2344}}
-.hero p{{color:#617087;font-size:18px}}
-.hero-buttons{{display:flex;gap:12px;flex-wrap:wrap;margin-top:25px}}
-.btn{{display:inline-flex;justify-content:center;align-items:center;gap:8px;padding:12px 22px;border-radius:30px;font-weight:800}}
-.btn-main{{color:#fff;background:#073f92}}
-.btn-whatsapp{{color:#073f92;background:#fff;border:1px solid #bad4eb}}
-.hero-image{{border-radius:30px;overflow:hidden;box-shadow:0 25px 60px rgba(7,63,146,.16)}}
-.hero-image img{{aspect-ratio:4/3;object-fit:cover}}
-section{{padding:65px 0}}
-.section-title{{max-width:850px;text-align:center;margin:0 auto 35px}}
-.section-title h2{{font-size:clamp(30px,4vw,40px);color:#0b2344}}
-.section-title p{{color:#66758a}}
-.services{{display:grid;grid-template-columns:repeat(4,1fr);gap:17px}}
-.service-card{{background:#fff;border:1px solid #dce8f4;border-radius:20px;padding:23px;box-shadow:0 10px 30px rgba(15,60,100,.05)}}
-.service-icon{{width:52px;height:52px;display:grid;place-items:center;background:#e6f3ff;color:#073f92;border-radius:15px;font-size:22px;margin-bottom:15px}}
-.service-card h3{{font-size:19px;margin-bottom:7px}} .service-card p{{color:#68768a;font-size:14px}}
-.split{{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}}
-.split-image{{border-radius:26px;overflow:hidden;box-shadow:0 20px 45px rgba(7,63,146,.14)}}
-.split-image img{{aspect-ratio:4/3;object-fit:cover}}
-.split h2{{font-size:38px;line-height:1.35;margin:15px 0}} .split p{{color:#66758a}}
-.check-list{{display:grid;gap:11px;margin-top:20px}} .check{{padding:13px 15px;background:#fff;border:1px solid #dce8f4;border-radius:13px}}
-.faults{{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}}
-.fault{{background:#fff;border:1px solid #dce8f4;padding:16px 18px;border-radius:15px;font-weight:700}}
-.gallery{{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}}
-.gallery-box{{overflow:hidden;border-radius:20px;box-shadow:0 15px 38px rgba(7,63,146,.13)}}
-.gallery-box img{{height:100%;object-fit:cover}}
-.g1{{grid-column:span 7;height:380px}} .g2{{grid-column:span 5;height:380px}}
-.g3,.g4,.g5{{grid-column:span 4;height:280px}}
-.contact-grid{{display:grid;grid-template-columns:.9fr 1.1fr;gap:25px}}
-.contact-box{{background:linear-gradient(145deg,#052e6c,#0c66c7);color:#fff;border-radius:28px;padding:35px}}
-.contact-box h2{{font-size:36px;margin:13px 0}}
-.phone{{color:#fff;font-size:38px;font-weight:900;direction:ltr;display:block;margin:15px 0}}
-.address{{margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,.2)}}
-.map{{overflow:hidden;border-radius:28px;box-shadow:0 16px 40px rgba(7,63,146,.12)}}
-.map iframe{{width:100%;height:100%;min-height:450px;border:0}}
-details{{max-width:900px;margin:12px auto;background:#fff;border:1px solid #dce8f4;border-radius:15px;padding:16px 18px}}
-summary{{cursor:pointer;font-weight:800}} details p{{color:#66758a;margin-top:8px}}
-footer{{padding:35px 0;text-align:center;color:#d9e6f5;background:#052e6c}} footer strong{{color:#fff;font-size:20px}}
-.floating-call{{position:fixed;bottom:20px;left:20px;z-index:9999;background:#073f92;color:#fff;width:62px;height:62px;border-radius:50%;display:grid;place-items:center;font-size:25px;box-shadow:0 10px 30px rgba(0,0,0,.25)}}
-@media(max-width:900px){{.hero-grid,.split,.contact-grid{{grid-template-columns:1fr}}.services{{grid-template-columns:repeat(2,1fr)}}.menu{{display:none}}.g1,.g2,.g3,.g4,.g5{{grid-column:span 12;height:300px}}}}
-@media(max-width:550px){{.services,.faults{{grid-template-columns:1fr}}.call-header{{font-size:12px;padding:8px 12px}}.phone{{font-size:29px}}}}
-</style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
 
-<script type="application/ld+json">
-{{
- "@context":"https://schema.org",
- "@type":"HomeAndConstructionBusiness",
- "@id":"https://alaska-alpha.vercel.app/#business",
- "name":"Alaska",
- "url":"https://alaska-alpha.vercel.app/",
- "telephone":"+201028729110",
- "description":"خدمات صيانة ثلاجات وديب فريزر ألاسكا.",
- "address":{{"@type":"PostalAddress","streetAddress":"11 Ahmed Heshmat St","addressLocality":"Zamalek","addressRegion":"Cairo","addressCountry":"EG"}},
- "geo":{{"@type":"GeoCoordinates","latitude":30.0647006,"longitude":31.2217304}}
-}}
-</script>
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* --- Header --- */
+        .site-header {
+            background: var(--primary-color);
+            color: #fff;
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        }
+
+        .header-container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .site-logo {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--accent-color);
+        }
+
+        .header-phone a {
+            color: #fff;
+            text-decoration: none;
+            background: var(--whatsapp-color);
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.3s;
+        }
+
+        .header-phone a:hover {
+            background: #1ebd56;
+        }
+
+        /* --- Hero Section --- */
+        .hero-section {
+            background: linear-gradient(rgba(13, 35, 58, 0.9), rgba(13, 35, 58, 0.9)), url('https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=1200&q=80') no-repeat center center/cover;
+            color: #fff;
+            text-align: center;
+            padding: 170px 20px 110px;
+            margin-top: 60px;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .hero-content h1 {
+            font-size: 42px;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+            font-weight: 900;
+        }
+
+        .hero-content p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            line-height: 1.8;
+            color: #e2e8f0;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background: var(--accent-color);
+            color: var(--primary-color);
+            padding: 14px 35px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 35px;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: #e6b800;
+            transform: translateY(-3px);
+        }
+
+        /* --- Gallery Section --- */
+        .gallery-section {
+            padding: 80px 20px;
+            background: #fff;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 35px;
+            margin-bottom: 50px;
+            color: var(--primary-color);
+            font-weight: 900;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .gallery-card {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+            border: 1px solid #eaeaea;
+            transition: transform 0.3s;
+            text-align: center;
+        }
+
+        .gallery-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .gallery-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gallery-card h3 {
+            padding: 20px;
+            font-size: 20px;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        /* --- Contact & Map Section --- */
+        .contact-section {
+            padding: 80px 20px;
+            background: #f1f5f9;
+        }
+
+        .contact-container {
+            max-width: 1200px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            align-items: center;
+        }
+
+        .contact-info h2 {
+            margin-bottom: 25px;
+            color: var(--primary-color);
+            font-size: 28px;
+        }
+
+        .contact-info p {
+            margin-bottom: 15px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #4a5568;
+        }
+
+        .contact-info i {
+            color: var(--primary-color);
+            font-size: 18px;
+        }
+
+        .map-box iframe {
+            width: 100%;
+            height: 380px;
+            border-radius: 12px;
+            border: 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        /* --- Footer --- */
+        .site-footer {
+            background: var(--primary-color);
+            color: #fff;
+            text-align: center;
+            padding: 25px;
+            font-size: 15px;
+        }
+
+        /* --- Floating WhatsApp / Call Button --- */
+        .floating-btn {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            background: var(--whatsapp-color);
+            color: #fff;
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 32px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 1000;
+            text-decoration: none;
+            transition: transform 0.3s;
+        }
+
+        .floating-btn:hover {
+            transform: scale(1.1);
+        }
+    </style>
 </head>
-
 <body>
-<div class="top-bar">صيانة ثلاجات وديب فريزر ألاسكا — 01028729110</div>
 
-<header>
-<div class="container nav">
-<a href="#home" class="logo">صيانة ألاسكا</a>
-<nav class="menu">
-<a href="#services">الخدمات</a>
-<a href="#faults">الأعطال</a>
-<a href="#gallery">الصور</a>
-<a href="#location">الموقع</a>
-</nav>
-<a href="tel:+201028729110" class="call-header"><i class="fa-solid fa-phone"></i> 01028729110</a>
-</div>
-</header>
+    <!-- الهيدر -->
+    <header class="site-header">
+        <div class="header-container">
+            <div class="site-logo">مركز صيانة ألاسكا</div>
+            <div class="header-phone">
+                <a href="tel:01028729110"><i class="fa-solid fa-phone"></i> 01028729110</a>
+            </div>
+        </div>
+    </header>
 
-<main id="home">
-<section class="hero">
-<div class="container hero-grid">
-<div>
-<span class="badge">ثلاجات • ديب فريزر</span>
-<h1>صيانة ألاسكا للثلاجات والديب فريزر</h1>
-<p>خدمات فحص وتشخيص أعطال أجهزة التبريد ألاسكا، مع تحديد سبب المشكلة قبل الإصلاح سواء كان العطل ضعف تبريد، توقف تجميد، تراكم ثلج، تسريب مياه أو صوت غير طبيعي.</p>
-<div class="hero-buttons">
-<a href="tel:+201028729110" class="btn btn-main"><i class="fa-solid fa-phone"></i> اتصال 01028729110</a>
-<a href="https://wa.me/201028729110" target="_blank" class="btn btn-whatsapp"><i class="fa-brands fa-whatsapp"></i> واتساب</a>
-</div>
-</div>
-<div class="hero-image">
-<img src="{data_uris[0]}" alt="صيانة ألاسكا للثلاجات والديب فريزر">
-</div>
-</div>
-</section>
+    <!-- المقدمة الكبيرة والقوية -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>مركز صيانة ألاسكا</h1>
+            <p>نرحب بكم في مركز صيانة ألاسكا المتخصص في تقديم خدمات الدعم الفني وإصلاح الثلاجات والديب فريزر بأعلى معايير الجودة والكفاءة. نحن نمتلك فريقاً من المهندسين والفنيين المحترفين القادرين على اكتشاف الأعطال بدقة وإصلاحها بالمنزل باستخدام أحدث الأجهزة وقطع الغيار الأصلية لضمان عمل أجهزتكم بكفاءة تامة وكأنها جديدة.</p>
+            <a href="tel:01028729110" class="btn-primary">اتصل بنا الآن للصيانة الفورية</a>
+        </div>
+    </section>
 
-<section id="services">
-<div class="container">
-<div class="section-title"><h2>خدمات صيانة ألاسكا</h2><p>خدمات متخصصة للثلاجات والديب فريزر.</p></div>
-<div class="services">
-<div class="service-card"><div class="service-icon"><i class="fa-solid fa-snowflake"></i></div><h3>صيانة ثلاجات ألاسكا</h3><p>فحص نظام التبريد والمروحة والحساسات والثرموستات ونظام إذابة الثلج.</p></div>
-<div class="service-card"><div class="service-icon"><i class="fa-solid fa-temperature-low"></i></div><h3>صيانة ديب فريزر ألاسكا</h3><p>فحص ضعف التجميد وعدم الفصل والتشغيل المستمر وتراكم الثلج.</p></div>
-<div class="service-card"><div class="service-icon"><i class="fa-solid fa-magnifying-glass"></i></div><h3>فحص وتشخيص الأعطال</h3><p>تحديد سبب المشكلة قبل تغيير أي مكون أو اتخاذ قرار الإصلاح.</p></div>
-<div class="service-card"><div class="service-icon"><i class="fa-solid fa-house"></i></div><h3>صيانة منزلية</h3><p>فحص الأعطال في موقع الجهاز عندما تسمح طبيعة المشكلة بذلك.</p></div>
-</div>
-</div>
-</section>
+    <!-- قسم الخدمات والصور -->
+    <section class="gallery-section">
+        <h2 class="section-title">من خدماتنا المميزة</h2>
+        <div class="gallery-grid">
+            <div class="gallery-card">
+                <img src="https://images.unsplash.com/photo-1556909211-b2ac96204b14?auto=format&fit=crop&w=600&q=80" alt="صيانة ديب فريزر ألاسكا">
+                <h3>صيانة ديب فريزر ألاسكا</h3>
+            </div>
+            <div class="gallery-card">
+                <img src="https://images.unsplash.com/photo-1611072259580-0d3e6f192597?auto=format&fit=crop&w=600&q=80" alt="صيانة وإصلاح ثلاجات ألاسكا">
+                <h3>صيانة ثلاجات ألاسكا</h3>
+            </div>
+            <div class="gallery-card">
+                <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80" alt="الدعم الفني وفريق المهندسين">
+                <h3>الدعم الفني وفريق المهندسين</h3>
+            </div>
+        </div>
+    </section>
 
-<section>
-<div class="container split">
-<div class="split-image"><img src="{data_uris[1]}" alt="فني صيانة ثلاجات ألاسكا"></div>
-<div>
-<span class="badge">تشخيص قبل الإصلاح</span>
-<h2>ضعف التبريد لا يعني دائمًا شحن غاز التبريد</h2>
-<p>يتم فحص المروحة، الحساسات، الثرموستات، نظام إذابة الثلج ودورة التبريد قبل تحديد سبب المشكلة.</p>
-<div class="check-list">
-<div class="check"><strong>ضعف التبريد:</strong> فحص دورة التشغيل وتدفق الهواء.</div>
-<div class="check"><strong>تراكم الثلج:</strong> فحص نظام إذابة الثلج والحساسات.</div>
-<div class="check"><strong>التشغيل المستمر:</strong> فحص جوان الباب والثرموستات ودورة التبريد.</div>
-</div>
-</div>
-</div>
-</section>
+    <!-- قسم الخريطة والعنوان -->
+    <section class="contact-section">
+        <div class="contact-container">
+            <div class="contact-info">
+                <h2>موقعنا وعنوان المركز</h2>
+                <p><i class="fa-solid fa-location-dot"></i> 11 شارع أحمد حشمت، محمد مظهري، الزمالك، محافظة القاهرة</p>
+                <p><i class="fa-solid fa-phone-volume"></i> الهاتف: 01028729110</p>
+                <p><i class="fa-solid fa-clock"></i> مواعيد العمل: يومياً من 9 صباحاً</p>
+                <a href="tel:01028729110" class="btn-primary" style="margin-top: 15px; padding: 10px 25px; font-size: 16px;">اطلب فني الآن</a>
+            </div>
+            <div class="map-box">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3453.0289300140644!2d31.21915547501122!3d30.06470521761156!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x145840e39ec8c973%3A0xfb258964a9078b6a!2sAlaska!5e0!3m2!1sen!2seg!4v1788915400986!5m2!1sen!2seg" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+            </div>
+        </div>
+    </section>
 
-<section id="faults">
-<div class="container">
-<div class="section-title"><h2>أشهر أعطال ألاسكا</h2><p>الأعراض الأكثر شيوعًا في الثلاجات والديب فريزر.</p></div>
-<div class="faults">
-<div class="fault">ثلاجة ألاسكا لا تبرد</div>
-<div class="fault">ضعف التبريد داخل الثلاجة</div>
-<div class="fault">الفريزر لا يجمد</div>
-<div class="fault">تراكم الثلج</div>
-<div class="fault">الثلاجة تعمل باستمرار</div>
-<div class="fault">تسريب مياه</div>
-<div class="fault">صوت مرتفع أو غير طبيعي</div>
-<div class="fault">ديب فريزر ألاسكا لا يجمد</div>
-<div class="fault">ديب فريزر ألاسكا لا يفصل</div>
-<div class="fault">ضعف التجميد</div>
-</div>
-</div>
-</section>
+    <!-- الفوتر -->
+    <footer class="site-footer">
+        <p>جميع الحقوق محفوظة © 2026 مركز صيانة ألاسكا</p>
+    </footer>
 
-<section id="gallery">
-<div class="container">
-<div class="section-title"><h2>صور صيانة ألاسكا</h2><p>صور الثلاجات والديب فريزر وخدمات الصيانة.</p></div>
-<div class="gallery">
-<div class="gallery-box g1"><img src="{data_uris[0]}" alt="صيانة ثلاجات ألاسكا"></div>
-<div class="gallery-box g2"><img src="{data_uris[1]}" alt="فني صيانة ألاسكا"></div>
-<div class="gallery-box g3"><img src="{data_uris[2]}" alt="ثلاجات ألاسكا"></div>
-<div class="gallery-box g4"><img src="{data_uris[3]}" alt="ديب فريزر ألاسكا"></div>
-<div class="gallery-box g5"><img src="{data_uris[4]}" alt="صيانة أجهزة ألاسكا"></div>
-</div>
-</div>
-</section>
+    <!-- زر الاتصال العائم -->
+    <a href="tel:01028729110" class="floating-btn" aria-label="اتصل بنا">
+        <i class="fa-solid fa-phone"></i>
+    </a>
 
-<section id="location">
-<div class="container contact-grid">
-<div class="contact-box">
-<span class="badge" style="background:white;color:#073f92">تواصل معنا</span>
-<h2>طلب صيانة ألاسكا</h2>
-<p>للاستفسار عن صيانة الثلاجات أو الديب فريزر يمكنك التواصل عبر الهاتف أو واتساب.</p>
-<a href="tel:+201028729110" class="phone">01028729110</a>
-<div class="hero-buttons">
-<a href="tel:+201028729110" class="btn btn-whatsapp">اتصال</a>
-<a href="https://wa.me/201028729110" target="_blank" class="btn btn-whatsapp">واتساب</a>
-</div>
-<div class="address"><strong>العنوان:</strong><br>11 Ahmed Heshmat St,<br>Mohammed Mazhar,<br>Zamalek,<br>Cairo</div>
-</div>
-
-<div class="map">
-<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3453.0289300140644!2d31.21915547501122!3d30.06470521761156!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x145840e39ec8c973%3A0xfb258964a9078b6a!2sAlaska!5e0!3m2!1sen!2seg!4v1788915400986!5m2!1sen!2seg" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-</div>
-</div>
-</section>
-
-<section>
-<div class="container">
-<div class="section-title"><h2>الأسئلة الشائعة حول صيانة ألاسكا</h2></div>
-<details><summary>لماذا ثلاجة ألاسكا لا تبرد؟</summary><p>قد يرتبط العطل بالمروحة، الحساسات، الثرموستات، نظام إذابة الثلج أو دورة التبريد.</p></details>
-<details><summary>هل ضعف التبريد يعني شحن فريون؟</summary><p>ليس بالضرورة. يجب فحص تدفق الهواء، المروحة، الحساسات ودورة التبريد أولًا.</p></details>
-<details><summary>لماذا ديب فريزر ألاسكا لا يجمد؟</summary><p>قد يرتبط السبب بالثرموستات، الحساسات، دورة التبريد أو مكونات التشغيل.</p></details>
-<details><summary>متى يحتاج الجهاز للفحص؟</summary><p>عند ضعف التبريد، عدم التجميد، التشغيل المستمر، تراكم الثلج، التسريب أو الأصوات غير الطبيعية.</p></details>
-</div>
-</section>
-</main>
-
-<footer>
-<div class="container" style="display:block">
-<strong>صيانة ألاسكا</strong><br>
-ثلاجات وديب فريزر<br>
-01028729110<br><br>
-<small>موقع لخدمات الصيانة ولا يدعي أنه الموقع الرسمي للشركة المصنعة.</small>
-</div>
-</footer>
-
-<a href="tel:+201028729110" class="floating-call" aria-label="اتصل بصيانة ألاسكا"><i class="fa-solid fa-phone"></i></a>
 </body>
 </html>
-"""
-
-out = Path("/mnt/data/index_alaska_embedded.html")
-out.write_text(html, encoding="utf-8")
-print(out)
