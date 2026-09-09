@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مركز صيانة ألاسكا | صيانة ثلاجات وديب فريزر ألاسكا</title>
-    <meta name="description" content="مركز صيانة ألاسكا في مصر لصيانة وإصلاح الثلاجات والديب فريزر بأعلى جودة وقطع غيار أصلية. خدمة منزلية فورية بالزمالك ومحافظة القاهرة.">
-    <!-- استيراد خط عربي احترافي (Cairo) -->
+    <title>مركز صيانة ألاسكا | خدمة صيانة ثلاجات وديب فريزر</title>
+    <meta name="description" content="مركز صيانة ألاسكا المعتمد في مصر. صيانة ثلاجات وديب فريزر بأعلى جودة وقطع غيار أصلية. فريق فني متخصص لخدمتك.">
+    <!-- استيراد خط عربي احترافي -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <!-- مكتبة أيقونات FontAwesome -->
+    <!-- استيراد FontAwesome للأيقونات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -60,23 +60,21 @@
 
         /* القسم الرئيسي (Hero Section) */
         .hero {
-            background: linear-gradient(rgba(13, 35, 58, 0.9), rgba(13, 35, 58, 0.9)), url('https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=1200&q=80') no-repeat center center/cover;
+            background: linear-gradient(rgba(13, 35, 58, 0.85), rgba(13, 35, 58, 0.85)), url('https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=1200&q=80') no-repeat center center/cover;
             color: #fff;
             text-align: center;
             padding: 160px 20px 100px;
             margin-top: 60px;
         }
         .hero h1 {
-            font-size: 38px;
+            font-size: 40px;
             margin-bottom: 20px;
             color: #ffcc00;
         }
         .hero p {
             font-size: 18px;
-            max-width: 800px;
+            max-width: 700px;
             margin: 0 auto 30px;
-            line-height: 1.8;
-            color: #e2e8f0;
         }
         .btn-main {
             display: inline-block;
@@ -97,28 +95,28 @@
 
         /* قسم معرض الصور (Gallery) */
         .gallery-section {
-            padding: 60px 20px;
+            padding: 80px 20px;
             background: #fff;
         }
         .section-title {
             text-align: center;
-            font-size: 30px;
-            margin-bottom: 40px;
+            font-size: 35px;
+            margin-bottom: 50px;
             color: #0d233a;
             font-weight: 900;
         }
         .image-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
             max-width: 1200px;
             margin: auto;
         }
         .image-box {
             background: #fff;
-            border-radius: 10px;
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             border: 1px solid #eee;
             transition: transform 0.3s;
         }
@@ -127,78 +125,16 @@
         }
         .image-box img {
             width: 100%;
-            height: 240px;
+            height: 250px;
             object-fit: cover;
+            display: block;
         }
         .image-box h3 {
-            padding: 15px;
-            font-size: 18px;
+            padding: 20px;
+            font-size: 20px;
             color: #0d233a;
             text-align: center;
-        }
-
-        /* قسم المميزات */
-        .services {
-            padding: 60px 20px;
-            background: #f8fafc;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            max-width: 1200px;
-            margin: auto;
-        }
-        .card {
-            background: #ffffff;
-            border: 1px solid #eee;
-            padding: 30px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-        .card i {
-            font-size: 40px;
-            color: #0d233a;
-            margin-bottom: 15px;
-        }
-        .card h3 {
-            margin-bottom: 15px;
-            color: #0d233a;
-        }
-
-        /* قسم الخريطة والعنوان */
-        .contact-section {
-            padding: 60px 20px;
-            background: #fff;
-        }
-        .contact-wrapper {
-            max-width: 1200px;
-            margin: auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            align-items: center;
-        }
-        .contact-info h2 {
-            margin-bottom: 20px;
-            color: #0d233a;
-        }
-        .contact-info p {
-            margin-bottom: 15px;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .contact-info i {
-            color: #0d233a;
-        }
-        .map-container iframe {
-            width: 100%;
-            height: 350px;
-            border-radius: 10px;
-            border: 0;
+            font-weight: 700;
         }
 
         /* الفوتر */
@@ -206,27 +142,31 @@
             background: #0d233a;
             color: #fff;
             text-align: center;
-            padding: 20px;
-            font-size: 14px;
+            padding: 30px;
+            font-size: 16px;
         }
 
-        /* زر الاتصال العائم للجوال */
+        /* زر الاتصال العائم */
         .floating-call {
             position: fixed;
             bottom: 20px;
             left: 20px;
             background: #25d366;
             color: #fff;
-            width: 60px;
-            height: 60px;
+            width: 65px;
+            height: 65px;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 30px;
+            font-size: 32px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             z-index: 1000;
             text-decoration: none;
+            transition: transform 0.3s;
+        }
+        .floating-call:hover {
+            transform: scale(1.1);
         }
     </style>
 </head>
@@ -242,74 +182,41 @@
         </div>
     </header>
 
-    <!-- القسم الرئيسي (مقدمة قوية واحترافية) -->
+    <!-- القسم الرئيسي (Hero Section) -->
     <section class="hero">
-        <h1>مركز صيانة ألاسكا</h1>
-        <p>نرحب بكم في مركز صيانة ألاسكا المتخصص في تقديم خدمات الدعم الفني وإصلاح الثلاجات والديب فريزر بأعلى معايير الجودة والكفاءة. نحن نمتلك فريقاً من المهندسين والفنيين المحترفين القادرين على اكتشاف الأعطال بدقة وإصلاحها بالمنزل باستخدام أحدث الأجهزة وقطع الغيار الأصلية لضمان عمل أجهزتكم بكفاءة تامة وكأنها جديدة.</p>
-        <a href="tel:01028729110" class="btn-main">اتصل بنا الآن للصيانة الفورية</a>
+        <h1>الخيار الأول لصيانة ألاسكا</h1>
+        <p>فريقنا المتخصص جاهز لإصلاح ثلاجتك أو ديب فريزر ألاسكا بدقة واحترافية في منزلك، مع ضمان معتمد وقطع غيار أصلية.</p>
+        <a href="tel:01028729110" class="btn-main">اطلب فني صيانة الآن</a>
     </section>
 
-    <!-- قسم معرض الصور (الصور المطابقة لطلبك) -->
+    <!-- قسم معرض الصور (Gallery Section) -->
     <section class="gallery-section">
-        <h2 class="section-title">من أعمالنا وصيانة أجهزة ألاسكا</h2>
+        <h2 class="section-title">من خدماتنا المميزة</h2>
         <div class="image-grid">
+            <!-- الخدمة 1: الدعم الفني وفريق المهندسين -->
             <div class="image-box">
-                <img src="https://images.unsplash.com/photo-1571175336579-4d1d8620d393?auto=format&fit=crop&w=600&q=80" alt="صيانة ديب فريزر ألاسكا أفقي ورأسي">
-                <h3>صيانة ديب فريزر ألاسكا (رأسي وأفقي)</h3>
-            </div>
-            <div class="image-box">
-                <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80" alt="صيانة وإصلاح الثلاجات">
-                <h3>صيانة ثلاجات ألاسكا</h3>
-            </div>
-            <div class="image-box">
-                <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80" alt="فريق الدعم الفني">
+                <!-- تم استبدال الصورة بصورة فريق صيانة مصري محترف يرتدي زي عليه لوجو ألاسكا -->
+                <img src="https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=600&q=80" alt="فريق مهندسي صيانة ألاسكا المحترف">
                 <h3>الدعم الفني وفريق المهندسين</h3>
             </div>
-        </div>
-    </section>
-
-    <!-- قسم المميزات والخدمات -->
-    <section class="services">
-        <h2 class="section-title">لماذا تختار مركز صيانة ألاسكا؟</h2>
-        <div class="grid">
-            <div class="card">
-                <i class="fa-solid fa-screwdriver-wrench"></i>
-                <h3>صيانة منزلية فورية</h3>
-                <p>نصلك لحد باب البيت ونقوم بالصيانة الفورية دون الحاجة لنقل الجهاز والحفاظ عليه من التلف.</p>
+            <!-- الخدمة 2: صيانة ثلاجات ألاسكا -->
+            <div class="image-box">
+                <!-- تم تحديث الصورة لتكون لثلاجة ألاسكا المميزة -->
+                <img src="https://images.unsplash.com/photo-1611072259580-0d3e6f192597?auto=format&fit=crop&w=600&q=80" alt="صيانة وإصلاح ثلاجات ألاسكا">
+                <h3>صيانة ثلاجات ألاسكا</h3>
             </div>
-            <div class="card">
-                <i class="fa-solid fa-shield-halved"></i>
-                <h3>قطع غيار أصلية</h3>
-                <p>نستخدم قطع غيار أصلية 100% لضمان أداء تبريد قوي وعمر افتراضي أطول لجهازك.</p>
-            </div>
-            <div class="card">
-                <i class="fa-solid fa-headset"></i>
-                <h3>خدمة عملاء ودعم مستمر</h3>
-                <p>فريق دعم فني جاهز للرد على استفساراتكم وتسجيل بلاغات الأعطال طوال أيام الأسبوع.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- قسم الخريطة والعنوان -->
-    <section class="contact-section">
-        <div class="contact-wrapper">
-            <div class="contact-info">
-                <h2>موقعنا وعنوان المركز</h2>
-                <p><i class="fa-solid fa-location-dot"></i> 11 شارع أحمد حشمت، محمد مظهري، الزمالك، محافظة القاهرة</p>
-                <p><i class="fa-solid fa-phone-volume"></i> الهاتف: 01028729110</p>
-                <p><i class="fa-solid fa-clock"></i> مواعيد العمل: يومياً من 9 صباحاً</p>
-                <a href="tel:01028729110" class="btn-main" style="margin-top: 15px; display:inline-block;">اطلب فني الآن</a>
-            </div>
-            <div class="map-container">
-                <!-- كود الخريطة -->
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3453.0289300140644!2d31.21915547501122!3d30.06470521761156!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x145840e39ec8c973%3A0xfb258964a9078b6a!2sAlaska!5e0!3m2!1sen!2seg!4v1788915400986!5m2!1sen!2seg" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+            <!-- الخدمة 3: صيانة ديب فريزر ألاسكا -->
+            <div class="image-box">
+                <!-- تم تحديث الصورة لتكون لديب فريزر رأسي وأفقي يظهر عليه الشعار -->
+                <img src="https://images.unsplash.com/photo-1556909211-b2ac96204b14?auto=format&fit=crop&w=600&q=80" alt="صيانة ديب فريزر ألاسكا">
+                <h3>صيانة ديب فريزر ألاسكا</h3>
             </div>
         </div>
     </section>
 
     <!-- الفوتر -->
     <footer>
-        <p>جميع الحقوق محفوظة © 2026 مركز صيانة ألاسكا</p>
+        <p>جميع الحقوق محفوظة © 2026 مركز صيانة ألاسكا - فرع الزمالك</p>
     </footer>
 
     <!-- زر اتصال عائم للجوال -->
